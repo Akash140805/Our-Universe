@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Our Universe </title>
+  <style>
+    :root{--accent:#FF6B9A;--bg:#0b1020;--card:#0f1724}
+    body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#071022 0%, #081122 60%);color:#e8eef8}
+    header{padding:24px;text-align:center}
+    h1{margin:.2rem 0;font-size:1.8rem}
+    p.lead{margin:0;color:#bcd1f0}
+    #container{display:grid;grid-template-columns:1fr 420px;gap:18px;padding:18px;max-width:1200px;margin:0 auto}
+    #map{height:80vh;border-radius:12px;overflow:hidden;box-shadow:0 6px 30px rgba(2,6,23,.6)}
+    #side{height:80vh;overflow:auto;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px}
+    .pin{padding:12px;margin-bottom:12px;background:rgba(255,255,255,0.02);border-radius:10px}
+    .pin img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .btn{display:inline-block;background:var(--accent);color:white;padding:10px 14px;border-radius:10px;text-decoration:none;margin-top:8px}
+    /* Modal for star map */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.8);z-index:50}
+    .modal.show{display:flex}
+    .modal-content{width:90%;max-width:1000px;background:var(--card);border-radius:12px;padding:12px;box-shadow:0 10px 40px rgba(2,6,23,.8);color:#f7fbff}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;padding:6px 12px}
+    .modal-body{padding:6px 12px}
+    .starmap-img{width:100%;height:auto;border-radius:8px;display:block}
+    .qr-wrap{display:flex;gap:12px;align-items:center;margin-top:8px}
+    .qr-canvas{width:120px;height:120px;background:white;padding:6px;border-radius:6px}
+    footer{text-align:center;padding:18px;color:#9fb0d9}
+    @media (max-width:980px){#container{grid-template-columns:1fr; padding:10px} #side{height:auto;margin-top:16px} }
+
+   body {
+  margin: 0;
+  font-family: Inter, system-ui, Arial;
+  background: linear-gradient(
+    135deg,
+    #25003f 0%,     /* deep purple */
+    #4c0070 35%,    /* violet */
+    #ff4fa3 75%,    /* soft pink */
+    #ff77b7 100%    /* gentle pastel pink finish */
+  );
+  color: #e8eef8;
+  min-height: 100vh;
+}
+
+/* --- animated galaxy + twinkling stars overlay --- */
+/* Layer 1: drifting galaxy texture (subtle movement) */
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08)),
+    url('assets/light-galaxy.jpg'); /* your galaxy/texture image */
+  background-size: 180% 180%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  opacity: 0.22;               /* adjust for strength */
+  z-index: -2;
+  pointer-events: none;
+  will-change: background-position, opacity;
+  animation: drift 40s linear infinite;
+}
+
+/* Layer 2: subtle twinkling dots using radial-gradient repeated */
+body::after{
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,0.9) 0px, rgba(255,255,255,0.05) 1px, transparent 2px),
+    radial-gradient(circle at 70% 40%, rgba(255,255,255,0.8) 0px, rgba(255,255,255,0.04) 1px, transparent 2px),
+    radial-gradient(circle at 40% 80%, rgba(255,255,255,0.85) 0px, rgba(255,255,255,0.05) 1px, transparent 2px);
+  background-size: 600px 600px, 500px 500px, 700px 700px;
+  background-position: 0 0, 0 0, 0 0;
+  opacity: 0.18;
+  mix-blend-mode: screen;
+  z-index: -1;
+  pointer-events: none;
+  animation: twinkle 6s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+/* keyframes */
+@keyframes drift {
+  0%   { background-position: 45% 45%; }
+  50%  { background-position: 55% 50%; }
+  100% { background-position: 45% 45%; }
+}
+
+@keyframes twinkle {
+  0%   { opacity: 0.14; transform: scale(1); }
+  25%  { opacity: 0.22; transform: scale(1.02); }
+  50%  { opacity: 0.16; transform: scale(0.99); }
+  75%  { opacity: 0.20; transform: scale(1.01); }
+  100% { opacity: 0.14; transform: scale(1); }
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  body::before, body::after {
+    animation: none !important;
+    opacity: 0.18 !important;
+  }
+}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Our Universe </h1>
+    <p class="lead">Happy Monthsary love, we are one moth closer to being together. Thankyou for being with me always,
+         from cheering my victories to calming me down when I am sad and supporting me in tough times. Thankyou for blessing me with your love and care.
+        I pray that our love keeps growing and we achieve our dreams together.I miss you love and want to hug you and it will happen soon, the distance will
+         pass and we will be together forever close to each other. I Love You</p>
+  </header>
+
+  <div id="container">
+    <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1wBkM8rEJoBEG3wdQc8GRp6SHTaWLfZc&ehbc=2E312F" width="640" height="480"></iframe>
+
+    <aside id="side">
+      <div class="pin">
+        <strong>How to use</strong>
+        <p>Click the pins on the left map. Open the final pin “Our Star” to view the starmap. Scan the QR to open the star map on your phone.</p>
+      </div>
+
+      <div id="pins-list"></div>
+
+      <div style="margin-top:14px" class="pin">
+        <strong>Easy viewing:</strong>
+        <p>A QR link to easily access the webpage</p>
+        <a id="copyLink" class="btn" href="#">Copy link</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Modal for star map -->
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <strong>These were the stars the night everything changed ✨</strong>
+        <button id="closeModal" style="background:none;border:0;color:#cfe6ff;font-size:18px">✕</button>
+      </div>
+      <div class="modal-body">
+        <img id="starmapImg" src="assets/starmap.png" alt="Star Map" class="starmap-img">
+        <div class="qr-wrap">
+          <canvas id="qr" class="qr-canvas"></canvas>
+          <div>
+            <p style="margin:0 0 6px 0">Scan to open the star map on phone</p>
+            <a id="downloadQR" class="btn" href="#" download="our-star-qr.png">Download QR</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Happy Monthsary, my love. Made with ❤ — Akash</footer>
+
+  <!-- Libraries: QR generation (qrious) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" integrity="" crossorigin="anonymous"></script>
+
+  <!-- Google Maps JS API (replace YOUR_GOOGLE_MAPS_API_KEY) -->
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script> -->
+
+  <script>
+  // Modal controls (cleaned for iframe / MyMaps version)
+  const modal = document.getElementById('modal');
+  const closeModal = document.getElementById('closeModal');
+  const starmapImg = document.getElementById('starmapImg');
+
+  function openStarModal() {
+    modal.classList.add('show');
+    // generate QR for the star map image (full URL)
+    const imageUrl = new URL(starmapImg.getAttribute('src'), location.href).href;
+    generateQR(imageUrl);
+  }
+
+  closeModal.addEventListener('click', () => modal.classList.remove('show'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+
+  // QR generation using qrious
+  // make the QR bigger so it is clearly visible
+  const qr = new QRious({
+    element: document.getElementById('qr'),
+    size: 360,
+    value: '' // set later
+  });
+
+  function generateQR(url) {
+    // set qr value and update download link
+    qr.set({ value: url, size: 360 });
+    const dl = document.getElementById('downloadQR');
+    dl.href = document.getElementById('qr').toDataURL('image/png');
+  }
+
+  // Copy page link button
+  document.getElementById('copyLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(location.href).then(() => {
+      alert('Link copied! Share it with her for the surprise ✨');
+    }).catch(()=> {
+      alert('Unable to copy automatically — select the URL and copy manually.');
+    });
+  });
+
+  // Add a visible "Open Star Map" button in the side area (so you can open modal without map markers)
+  (function addOpenStarButton() {
+    const side = document.getElementById('side');
+    if (!side) return;
+    const container = document.createElement('div');
+    container.className = 'pin';
+    container.style.marginTop = '12px';
+    container.innerHTML = `
+      <strong>Star Map</strong>
+      <p style="margin:6px 0 8px 0">Click to open the star map and get the QR (works with the embedded map).</p>
+    `;
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.textContent = 'Open Star Map';
+    btn.addEventListener('click', openStarModal);
+    container.appendChild(btn);
+    // append before the share pin (so it's visible)
+    const sharePin = side.querySelector('.pin:last-of-type');
+    side.insertBefore(container, sharePin);
+  })();
+
+  // Since we are using a MyMaps iframe (not Google Maps API), remove any initMap call:
+  // If you had window.onload = initMap; remove or replace it:
+  if (window.onload && typeof window.onload === 'function' && window.onload.name === 'initMap') {
+    window.onload = null; // prevent trying to run initMap()
+  }
+</script>
+</body>
+</html>
